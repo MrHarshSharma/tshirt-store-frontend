@@ -6,7 +6,7 @@ import { fetchDataFromAPI } from "@/utils/api";
 
 
 export default function Home({products}) {
-console.log(products)
+
   return (
     <main className="">
       <HeroBanner />
