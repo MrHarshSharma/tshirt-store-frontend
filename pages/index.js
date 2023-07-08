@@ -1,3 +1,4 @@
+import DeliveryType from "@/components/DeliveryType";
 import HeroBanner from "@/components/HeroBanner";
 import Loader from "@/components/Loader";
 import ProductCard from "@/components/ProductCard";
@@ -26,9 +27,9 @@ export default function Home({products}) {
         {/* heasding and paragraph end */}
 
         {/* product grid start */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 my-14 px-5 md:px-0 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 my-14 px-5 md:px-0 ">
         {products?.data?.map((product, count)=>{
-          if(count < 3){
+          if(count < 4){
           return(
 
               <ProductCard key={product?.id} data={product} isNew={true} />
@@ -37,6 +38,9 @@ export default function Home({products}) {
         })}
         </div>
         {/* product grid end */}
+
+        {/* free delivery container*/}
+        <DeliveryType />
       </Wrapper>
     </main>
   );

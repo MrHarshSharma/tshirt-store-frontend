@@ -2,37 +2,20 @@ import DashboardLayout from "@/components/DashboardLayout";
 import ProductCardList from "@/components/ProductCardList";
 import { fetchDataFromAPI } from "@/utils/api";
 import { useSession, getSession } from "next-auth/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {HiCurrencyRupee} from 'react-icons/hi2';
 
 
 
-const Dashboard = ({ AllOrders, AllProducts, session }) => {
+const Dashboard = ({ AllOrders, AllProducts, session, ProductSold }) => {
 
 const [stats, setStats] = useState([
-  { id: 1, name: 'Revenue', value: '' },
-  { id: 2, name: 'Total Assets', value: AllProducts.length},
-  { id: 3, name: 'New users annually', value: '46,000' },
+  { id: 1, name: 'Revenue', value: AllOrders, navigateTo:'/dashboard/orders' },
+  { id: 2, name: 'Total Assets', value: AllProducts.length, navigateTo:'/dashboard/products'},
+  { id: 3, name: 'Products sold', value: ProductSold, navigateTo:'/dashboard/orders' },
 ])
   
-console.log(session)
-
-  useEffect(()=>{
-    let TotalSales = 0;
-    const CalculateTotalSalePrice = () =>{
-      AllOrders.forEach((soldProduct)=>{
-        soldProduct.attributes.products.forEach((price)=>{
-          TotalSales = TotalSales + price.attributes.price
-          
-        })
-      })
-
-      stats[0].value = "₹ "+ TotalSales
-      setStats(stats)
-    } 
-
-    CalculateTotalSalePrice()
-  },[])
   return (
     <DashboardLayout>
     <div className="bg-white py-24 sm:py-32">
@@ -44,9 +27,11 @@ console.log(session)
             <dd className="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
               {stat.value}
             </dd>
+            <Link href={stat.navigateTo}>
             <div className="bg-gray-900 py-2 ">
               <span className="text-gray-100 ">View all</span>
-            </div>
+              </div>
+              </Link>
           </div>
         ))}
       </dl>
@@ -60,9 +45,21 @@ console.log(session)
 export default Dashboard;
 
 export async function getServerSideProps(context) {
-  const AllOrders = await fetchDataFromAPI(`/api/orders`);
+  let AllOrders = await fetchDataFromAPI(`/api/orders`);
+  const ProductSold = AllOrders?.data?.length; 
+
+  let TotalSales = 0;
+  AllOrders?.data?.forEach((soldProduct)=>{
+    soldProduct.attributes.products.forEach((price)=>{
+      TotalSales = TotalSales + price.attributes.price
+      
+    })
+  })
+
+  AllOrders = "₹ "+ TotalSales
 
   const AllProducts = await fetchDataFromAPI(`/api/products`);
+ 
   const session  = await getSession(context);
 
   if(!session || session.user.email != process.env.NEXT_PUBLIC_EMAIL_ADMIN){
@@ -74,6 +71,6 @@ export async function getServerSideProps(context) {
   }
   return {
     // Passed to the page component as props
-    props: { AllOrders : AllOrders.data, AllProducts: AllProducts.data, session },
+    props: { AllOrders : AllOrders, AllProducts: AllProducts.data, session, ProductSold },
   };
 }

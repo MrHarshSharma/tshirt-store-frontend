@@ -106,19 +106,19 @@ const Header = () => {
            {/*login icon start */}
            <div>
            <div className="flex justify-center items-center  cursor-pointer relative">
-                <div className="border cursor-pointer px-0 pr-[4px] rounded-full hover:bg-black/[0.05]">
+                <div className="border cursor-pointer px-0 pr-[4px] rounded-full">
                 <div className="flex items-center gap-2">
                 {session?(
-                  <React.Fragment>
+                  <span  onClick={()=>signOut()} className="flex gap-1"> 
                   <img className="rounded-full " alt="userImg" height={25} width={25} src={session.user.image} />
-                    <span onClick={()=>signOut()}>Sign Out</span>
-                  </React.Fragment>
+                    <span>Sign Out</span>
+                  </span>
                   ):(
                     
-                    <React.Fragment>
+                    <span onClick={()=>signIn()} className="flex gap-1">
                     <BiUserPlus className="text-[24px] p-1 bg-slate-400 rounded-full " />
-                    <span onClick={()=>signIn()}>Sign In</span>
-                  </React.Fragment>
+                    <span >Sign In</span>
+                  </span>
                     )}
                     </div>
                 </div>

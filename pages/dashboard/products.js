@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link";
 import Loader from "@/components/Loader";
+import NoDataPresent from "@/components/NoDataPresent";
 
 const products = ({ Allproducts }) => {
     const router = useRouter()
@@ -150,6 +151,9 @@ const products = ({ Allproducts }) => {
       </Transition.Root>
       <div className="w-full">
       <Link href="/dashboard/addproduct"> Add new</Link>
+      {products?.data?.length == 0 && (
+        <NoDataPresent message='No Products Available' />
+      )}
         <ul role="list" className="divide-y divide-gray-100">
           {products?.data?.map((product) => {
             return (

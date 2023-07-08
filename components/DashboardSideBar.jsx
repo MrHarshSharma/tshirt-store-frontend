@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import Link from "next/link";
-import { HiHome, HiShoppingBag, HiCreditCard } from "react-icons/hi";
+import { HiHome, HiShoppingBag, HiOutlineShoppingCart } from "react-icons/hi";
 import { useRouter } from "next/router";
 
 const SideBar = forwardRef(({ showNav }, ref) => {
@@ -59,7 +59,22 @@ const SideBar = forwardRef(({ showNav }, ref) => {
             </div>
           </div>
         </Link>
-       
+        <Link href="/dashboard/orders">
+        <div
+          className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer mb-3 flex items-center transition-colors ${
+            router.pathname.includes('/dashboard/orders') 
+              ? "bg-orange-100 text-orange-500"
+              : "text-gray-400 hover:bg-orange-100 hover:text-orange-500"
+          }`}
+        >
+          <div className="mr-2">
+            <HiOutlineShoppingCart className="h-5 w-5" />
+          </div>
+          <div>
+            <p>Orders</p>
+          </div>
+        </div>
+      </Link>
       </div>
     </div>
   );

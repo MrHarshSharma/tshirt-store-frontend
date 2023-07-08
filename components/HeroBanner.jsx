@@ -30,9 +30,9 @@ const HeroBanner = () => {
           </div>
         )}
       >
-          {bannerImages.map((imageNumber)=>(
+          {bannerImages.map((imageNumber, index)=>(
 
-            <div>
+            <div key={index}>
             <img
             src={`/slide-${imageNumber}.jpeg`}
             className="aspect-[16/10] md:aspect-auto object-contain "
