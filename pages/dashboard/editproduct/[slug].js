@@ -15,7 +15,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { HiX } from "react-icons/hi";
 import FormData from "form-data";
 import Loader from "@/components/Loader";
-import { getSession } from "next-auth/react";
 
 const ProductDetails = ({ product, AllCategories }) => {
   const router = useRouter();
@@ -505,18 +504,7 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params: { slug },context }) {
-
-  const session  = await getSession(context);
-
-  if(!session || session.user.email != process.env.NEXT_PUBLIC_EMAIL_ADMIN){
-    return{
-      redirect:{
-        destination:'/login'
-      }
-    }
-  }
-
+export async function getStaticProps({ params: { slug } }) {
   const product = await fetchDataFromAPI(
     `/api/products?populate=*&filters[slug][$eq]=${slug}`
   );
