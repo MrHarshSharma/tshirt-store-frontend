@@ -15,8 +15,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { HiX, HiXCircle } from "react-icons/hi";
 import FormData from "form-data";
 import Loader from "@/components/Loader";
+import { getSession } from "next-auth/react";
 
 const addProduct = ({ AllCategories }) => {
+  
   const router = useRouter();
   const dispatch = useDispatch();
   const [showLoader, setShowLoader] = useState(false)
@@ -508,11 +510,20 @@ const addProduct = ({ AllCategories }) => {
 
 export default addProduct;
 
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
   const AllCategories = await fetchDataFromAPI(`/api/categories`);
-
+  const session  = await getSession(context);
+  
+    if(session?.user?.email != process.env.NEXT_PUBLIC_EMAIL_ADMIN){
+        return{
+          redirect:{
+            destination:'/'
+          }
+        }
+    }
   return {
     // Passed to the page component as props
     props: { AllCategories },
   };
 }
+
