@@ -45,6 +45,16 @@ const [stats, setStats] = useState([
 export default Dashboard;
 
 export async function getServerSideProps(context) {
+  const session  = await getSession(context);
+
+  if(!session || session.user.email != process.env.NEXT_PUBLIC_EMAIL_ADMIN){
+    return{
+      redirect:{
+        destination:'/login'
+      }
+    }
+  }
+  
   let AllOrders = await fetchDataFromAPI(`/api/orders`);
   const ProductSold = AllOrders?.data?.length; 
 
@@ -60,15 +70,7 @@ export async function getServerSideProps(context) {
 
   const AllProducts = await fetchDataFromAPI(`/api/products`);
  
-  const session  = await getSession(context);
-
-  if(!session || session.user.email != process.env.NEXT_PUBLIC_EMAIL_ADMIN){
-    return{
-      redirect:{
-        destination:'/login'
-      }
-    }
-  }
+ 
   return {
     // Passed to the page component as props
     props: { AllOrders : AllOrders, AllProducts: AllProducts.data, session, ProductSold },

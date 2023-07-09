@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 
 import { editproduct, fetchDataFromAPI } from "@/utils/api";
 import { getDiscountedPricePercentage } from "@/utils/helper";
 
 import { useDispatch } from "react-redux";
-import { STRAPI_API_TOKEN} from "@/utils/urls"
+import { STRAPI_API_TOKEN } from "@/utils/urls";
 import "react-toastify/dist/ReactToastify.css";
-import { ChevronDoubleLeftIcon, PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import {
+  ChevronDoubleLeftIcon,
+  PhotoIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/solid";
 import { HiChevronLeft } from "react-icons/hi";
 import { useRouter } from "next/router";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -15,17 +19,31 @@ import "react-toastify/dist/ReactToastify.css";
 import { HiX } from "react-icons/hi";
 import FormData from "form-data";
 import Loader from "@/components/Loader";
+import { getSession } from "next-auth/react";
 
 const ProductDetails = ({ product, AllCategories }) => {
   const router = useRouter();
+  useLayoutEffect(() => {
+    const fn = async () => {
+      const session = await getSession();
+
+      if (session?.user?.email != process.env.NEXT_PUBLIC_EMAIL_ADMIN) {
+        router.push("/");
+      }
+      
+    };
+
+    fn();
+  }, []);
+
   const dispatch = useDispatch();
-  const [showLoader, setShowLoader] = useState(false)
+  const [showLoader, setShowLoader] = useState(false);
 
   const p = product?.data?.[0].attributes;
   const productId = product?.data?.[0].id;
   const [productDetails, setProductDetails] = useState({});
- 
-  const [newThumbnail, setThumbnail] = useState('')
+
+  const [newThumbnail, setThumbnail] = useState("");
   const [ThumbFile, setThumbFile] = useState();
   useEffect(() => {
     let allProductDetails = {};
@@ -44,12 +62,10 @@ const ProductDetails = ({ product, AllCategories }) => {
       });
     });
     setProductDetails(allProductDetails);
-
-
   }, []);
   const [update, setUpdate] = useState(0);
   const updateProduct = async (id) => {
-    setShowLoader(true)
+    setShowLoader(true);
     notify_start();
     delete productDetails.image;
     delete productDetails.thumbnail;
@@ -57,13 +73,15 @@ const ProductDetails = ({ product, AllCategories }) => {
     const formData = new FormData();
 
     formData.append("data", JSON.stringify(productDetails));
-    formData.append("files.thumbnail", newThumbnail) ;   
+    formData.append("files.thumbnail", newThumbnail);
 
- 
-    const updateThisProduct = await editproduct(`/api/products/${id}`, formData);
+    const updateThisProduct = await editproduct(
+      `/api/products/${id}`,
+      formData
+    );
 
     if (updateThisProduct?.data) {
-      setShowLoader(false)
+      setShowLoader(false);
       notify_done();
     }
   };
@@ -94,15 +112,13 @@ const ProductDetails = ({ product, AllCategories }) => {
     });
   };
 
-
   const onSingleFileChange = (e) => {
     const file = e.target.files;
     console.log("onSingleFileChange", file);
     console.log("onSingleFileChange1", file[0]);
 
     setThumbnail(file[0]);
-    if(file[0]){
-
+    if (file[0]) {
       setThumbFile(URL.createObjectURL(file[0]));
     }
   };
@@ -135,7 +151,7 @@ const ProductDetails = ({ product, AllCategories }) => {
   };
   return (
     <DashboardLayout>
-    {showLoader && <Loader />}
+      {showLoader && <Loader />}
 
       <ToastContainer />
       <div className="w-full">
@@ -218,8 +234,10 @@ const ProductDetails = ({ product, AllCategories }) => {
                           <input
                             defaultValue={productDetails.original_price}
                             onChange={(e) => {
-                              productDetails.original_price =  Number(e.target.value);
-                              setUpdate(prev=> prev +  1)
+                              productDetails.original_price = Number(
+                                e.target.value
+                              );
+                              setUpdate((prev) => prev + 1);
                             }}
                             type="text"
                             name="p_original_price"
@@ -245,7 +263,7 @@ const ProductDetails = ({ product, AllCategories }) => {
                             defaultValue={productDetails.price}
                             onChange={(e) => {
                               productDetails.price = Number(e.target.value);
-                              setUpdate(prev=> prev +  1)
+                              setUpdate((prev) => prev + 1);
                             }}
                             type="text"
                             name="p_discounted_price"
@@ -275,7 +293,14 @@ const ProductDetails = ({ product, AllCategories }) => {
                             name="p.total_discount"
                             id="p.total_discount"
                             autoComplete="p.total_discount"
-                            className={`${getDiscountedPricePercentage(productDetails.original_price,productDetails.price) > -0.01 ? 'text-green-500':'text-red-500'} block text-green-500 flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 hover:cursor-not-allowed`}
+                            className={`${
+                              getDiscountedPricePercentage(
+                                productDetails.original_price,
+                                productDetails.price
+                              ) > -0.01
+                                ? "text-green-500"
+                                : "text-red-500"
+                            } block text-green-500 flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 hover:cursor-not-allowed`}
                             disabled
                           />
                         </div>
@@ -302,7 +327,6 @@ const ProductDetails = ({ product, AllCategories }) => {
                         />
                       </div>
                     </div>
-
 
                     <div className="sm:col-span-4">
                       <label
@@ -347,7 +371,6 @@ const ProductDetails = ({ product, AllCategories }) => {
                             );
                           })}
                         </div>
-                       
                       </div>
                     </div>
 
@@ -359,41 +382,42 @@ const ProductDetails = ({ product, AllCategories }) => {
                         Thumbnail
                       </label>
                       <div className="mt-2 flex items-center gap-x-3">
-                      {ThumbFile?(
-
-                        <img
-                        className="h-12 w-12 border-slate-500 border-2 rounded-md"
-                        src={ThumbFile}
-                        alt={`images`}
-                        />
-                        ):(
-
+                        {ThumbFile ? (
                           <img
-                          className="h-12 w-12 border-slate-500 border-2 rounded-md"
-                          src={p?.thumbnail?.data?.attributes?.url}
-                          alt={`images`}
+                            className="h-12 w-12 border-slate-500 border-2 rounded-md"
+                            src={ThumbFile}
+                            alt={`images`}
                           />
-                          )}
-                          <label
+                        ) : (
+                          <img
+                            className="h-12 w-12 border-slate-500 border-2 rounded-md"
+                            src={p?.thumbnail?.data?.attributes?.url}
+                            alt={`images`}
+                          />
+                        )}
+                        <label
                           htmlFor="file-upload"
                           className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2  focus-within:ring-offset-2"
-                          >
+                        >
                           <span>Upload New</span>
                           <input
-                          id="file-upload"
-                          name="file-upload"
-                          type="file"
-                          className="sr-only"
-                          onChange={(e) => onSingleFileChange(e)}
+                            id="file-upload"
+                            name="file-upload"
+                            type="file"
+                            className="sr-only"
+                            onChange={(e) => onSingleFileChange(e)}
                           />
-                          </label>
-                          {ThumbFile&&(
-                            
-                            <span className="cursor-pointer text-rose-500" onClick={()=>{
-                              setThumbFile('')
-                            }}>Remove</span>
-                            )}
-                         
+                        </label>
+                        {ThumbFile && (
+                          <span
+                            className="cursor-pointer text-rose-500"
+                            onClick={() => {
+                              setThumbFile("");
+                            }}
+                          >
+                            Remove
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -466,7 +490,7 @@ const ProductDetails = ({ product, AllCategories }) => {
 
               <div className="mt-6 flex items-center justify-end gap-x-6">
                 <button
-                onClick={() => router.back()}
+                  onClick={() => router.back()}
                   className="text-sm font-semibold leading-6 text-gray-900"
                 >
                   Cancel
