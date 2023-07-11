@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addToCart } from "@/store/cartSlice";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DeliveryType from "@/components/DeliveryType";
 
 
 const ProductDetails = ({ product, products }) => {
@@ -34,6 +35,7 @@ const ProductDetails = ({ product, products }) => {
   }
   return (
     <div className="w-full md:py-20">
+ 
     <ToastContainer />
       <Wrapper>
         <div className=" flex flex-col lg:flex-row md:px-10 gap-[50px] lg:gap-[100px] ">
@@ -169,7 +171,9 @@ const ProductDetails = ({ product, products }) => {
         {/** RElated products start */}
         <RelatedProducts products={products} />
         {/** RElated products start */}
-      </Wrapper>
+        </Wrapper>
+        <DeliveryType />
+
     </div>
   );
 };

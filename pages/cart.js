@@ -6,6 +6,7 @@ import CartItem from "@/components/CartItem";
 import { useSelector } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js";
 import { makePaymentRequest } from "@/utils/api";
+import DeliveryType from "@/components/DeliveryType";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 const Cart = () => {
@@ -114,6 +115,7 @@ const Cart = () => {
           </div>
         )}
       </Wrapper>
+      <DeliveryType />
     </div>
   );
 };
