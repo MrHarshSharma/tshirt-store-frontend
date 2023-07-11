@@ -18,7 +18,7 @@ const ProductCard = ({ data: { attributes: p, id }, isNew }) => {
         alt={`${p.slug} image`}
         className="w-full"
       />
-      <div className="p-4 text-black/[0.9]">
+      <div className="py-4 text-black/[0.9]">
       {isNew && (
         
         <MdFiberNew
