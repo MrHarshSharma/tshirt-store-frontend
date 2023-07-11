@@ -6,7 +6,9 @@ import { BiArrowBack } from "react-icons/bi";
 const HeroBanner = () => {
   const [bannerImages, setBannerImages] = useState([1,2,3,4]);
   return (
-    <div className="relative text-white text-[20px] w-full max-w-[1360px] mx-auto ">
+    <React.Fragment>
+   
+    <div className="relative text-white text-[20px] w-full max-w-[1360px] mx-auto">
       <Carousel
         autoPlay={true}
         infiniteLoop={true}
@@ -45,6 +47,14 @@ const HeroBanner = () => {
       </Carousel>
        
     </div>
+
+
+
+
+   
+    </React.Fragment>
+
+    
   );
 };
 
