@@ -92,9 +92,13 @@ const ProductDetails = ({ product, products }) => {
                 {p?.quantity?.data.map((quant) => {
                   return (
                     <div
+                    
                       onClick={() => {
-                        setSelectedSize(quant.size);
-                        setShowError(false);
+                        if(quant.enabled){
+
+                          setSelectedSize(quant.size);
+                          setShowError(false);
+                        }
                       }}
                       key={quant.id}
                       className={`border rounded-md text-center py-3 font-medium  ${
