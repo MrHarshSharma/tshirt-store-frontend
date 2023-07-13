@@ -115,7 +115,6 @@ const Cart = () => {
           </div>
         )}
       </Wrapper>
-      <DeliveryType />
     </div>
   );
 };

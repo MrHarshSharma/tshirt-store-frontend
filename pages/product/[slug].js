@@ -176,7 +176,7 @@ const ProductDetails = ({ product, products }) => {
         <RelatedProducts products={products} />
         {/** RElated products start */}
         </Wrapper>
-        <DeliveryType />
+
 
     </div>
   );

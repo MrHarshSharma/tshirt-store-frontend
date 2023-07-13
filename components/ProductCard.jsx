@@ -16,7 +16,7 @@ const ProductCard = ({ data: { attributes: p, id }, isNew }) => {
         width={300}
         src={p.thumbnail.data.attributes.url}
         alt={`${p.slug} image`}
-        className="w-full"
+        className="w-full rounded-md"
       />
       <div className="py-4 text-black/[0.9]">
       {isNew && (

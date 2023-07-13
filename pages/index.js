@@ -41,7 +41,7 @@ export default function Home({products}) {
 
         {/* free delivery container*/}
         </Wrapper>
-        <DeliveryType />
+
     </main>
   );
 }

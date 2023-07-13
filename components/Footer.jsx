@@ -1,9 +1,12 @@
 import React from 'react'
 import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
+import DeliveryType from './DeliveryType';
 import Wrapper from "./Wrapper";
 
 const Footer = () => {
   return (
+    <React.Fragment>
+    <DeliveryType />
     <footer className="bg-black text-white pt-14 pb-3">
     <Wrapper className="flex justify-between flex-col md:flex-row gap-[50px] md:gap-0">
         {/* LEFT START */}
@@ -119,6 +122,7 @@ const Footer = () => {
         {/* RIGHT END */}
     </Wrapper>
 </footer>
+</React.Fragment>
   )
 }
 
