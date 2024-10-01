@@ -17,6 +17,27 @@ const Cart = () => {
   }, [cartItems]);
 
   const handelPayment = async () => {
+    setLoading(true);
+    setTimeout(()=>{
+      toast.success("Order placed successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
+      setTimeout(()=>{
+        setLoading(false)
+      },2000)
+    },2000)
+
+    
+    
+    return
     try {
       setLoading(true);
       const stripe = await stripePromise;
